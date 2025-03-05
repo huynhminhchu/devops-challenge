@@ -61,10 +61,11 @@
 # Scenario Analysis
 📌 Since this VM is only running a NGINX load balancer, it appears that there can be several plausible issues causing the 99% memory usage:
 
-🛑 NGINX worker processes misconfiguration
-🛑 Memory leak in nginx or Upstream Proxying
-🛑 Memory fragmentation in Linux
+🛑 NGINX worker processes misconfiguration.
 
+🛑 Memory leak in NGINX or Upstream Proxying.
+
+🛑 Memory fragmentation in Linux.
 
 ## 🌩️ Issue 1: Nginx Worker Processes Misconfiguration
 
@@ -131,3 +132,8 @@ Proxying 10MB responses with default buffers fills RAM over time.
 ```bash
 sync; echo 3 > /proc/sys/vm/drop_caches
 ```
+
+
+### Opinion:
+
+- In my humble experience, the idea that this VM is **consistently** running at 99% memory usage doesn’t hold up. If memory usage hits that level, the VM would likely crash or become unresponsive almost immediately—long before we could call it consistent.
