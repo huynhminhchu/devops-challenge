@@ -1,0 +1,32 @@
+graph TD
+    A[Users] -->|DNS Query| R[Route 53]
+    R -->|HTTPS| B[CloudFront]
+    B -->|Static Assets| C[Application Load Balancer]
+    B -->|API Requests| D[API Gateway]
+
+    D -->|REST API| E[Amazon EKS]
+    D -->|WebSocket| F[WebSocket API]
+
+    subgraph Amazon EKS
+        E1[Order Placement Service] -->|Orders| E2[Order Matching Engine]
+        E3[User Account Management Service]
+    end
+
+    E2 -->|Trades| I[DynamoDB]
+    E3 -->|Account Data| H[Amazon Aurora DB]
+    E2 -->|Real-Time Market Data| K[AWS Kinesis Data Streams]
+    K -->|Market Data Feed| J[Elasticache Redis]
+    J -->|Market Updates| F
+    F -->|Real-Time Data| A
+
+    I -->|Trade History| L[Amazon S3]
+    E -->|Logs| L
+    H -->|Backups| L
+    M[CloudWatch + X-Ray] -->|Monitoring| E
+    M -->|Tracing| F
+
+    subgraph Core Functions
+        E1 -->|Order Placement| E2
+        E2 -->|Real-Time Market Data| K
+        H -->|User Account Management| E3
+    end
